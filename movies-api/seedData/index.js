@@ -1,5 +1,6 @@
 import userModel from '../api/users/userModel';
 import genreModel from '../api/genres/genresModel';
+import genresModel from '../api/genres/genresModel';
 
 const users = [
     {
@@ -28,11 +29,10 @@ export async function loadUsers() {
       await userModel.deleteMany();
       await users.forEach(user => userModel.create(user));
       console.info(`${users.length} users were successfully stored.`);
+      await genresModel.deleteMany();
+      await genres.forEach(genre => genreModel.create(genre));
+      console.info(`${genres.length} genres were successfully stored.`);
     } catch (err) {
       console.error(`failed to Load user Data: ${err}`);
     }
   }
-
-    // await genreModel.deleteMany();
-    //     await genreModel.collection.insertMany(genres);
-    //     console.info(`${genres.length} genres were successfully stored.`);
