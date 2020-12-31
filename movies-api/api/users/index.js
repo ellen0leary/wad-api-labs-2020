@@ -66,7 +66,9 @@ router.post('/:userName/favourites', async (req, res, next) => {
   if (!movie) return res.status(401).json({ code: 401, msg: 'Authentication failed. Movie not found.' });
   const user = await User.findByUserName(userName).catch(next);
   if (!user) return res.status(401).json({ code: 401, msg: 'Authentication failed. User not found.' });
-  await user.favourites.push(movie._id);
+  if(user.favourites.indexOf(movie._id) === -1){
+    await user.favourites.push(movie._id);
+  }
   await user.save(); 
   res.status(201).json(user); 
 });

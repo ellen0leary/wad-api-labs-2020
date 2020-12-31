@@ -11,7 +11,7 @@ const UserSchema = new Schema({
 
   UserSchema.statics.findByUserName = function (username) {
     return this.findOne({ username: username });
-  };
+  }; 
   
   UserSchema.methods.comparePassword = function(passw, cb) {
     bcrypt.compare(passw, this.password, (err, isMatch) => {
