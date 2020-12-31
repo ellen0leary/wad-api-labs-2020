@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 import movieModel from '../movies/movieModel';
 
 const router = express.Router(); // eslint-disable-line
-
 // Get all users
 router.get('/', (req, res,next) => {
     User.find().then(users =>  res.status(200).json(users)).catch(next);
@@ -19,11 +18,18 @@ router.post('/', async (req, res, next) => {
     });
   }
   if (req.query.action === 'register') {
-    await User.create(req.body).catch(next);
-    res.status(201).json({
-      code: 201,
-      msg: 'Successful created new user.',
+    if(User.validPassword(req.body.password)){
+      await User.create(req.body).catch(next);
+      res.status(201).json({
+        code: 201,
+        msg: 'Successful created new user.',
+      });
+  } else {
+    res.status(401).json({
+      code: 401,
+      msg: 'No user corrected.',
     });
+  }
   } else {
     const user = await User.findByUserName(req.body.username).catch(next);
       if (!user) return res.status(401).json({ code: 401, msg: 'Authentication failed. User not found.' });
