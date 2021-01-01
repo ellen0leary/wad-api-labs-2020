@@ -18,25 +18,18 @@ router.post('/', async (req, res, next) => {
     });
   }
   if (req.query.action === 'register') {
-    if(User.validPassword(req.body.password)){
-      await User.create(req.body).catch(next);
-      res.status(201).json({
-        code: 201,
-        msg: 'Successful created new user.',
-      });
-  } else {
-    res.status(401).json({
-      code: 401,
-      msg: 'No user corrected.',
+    await User.create(req.body).catch(next);
+    res.status(201).json({
+      code: 201,
+      msg: 'Successful created new user.',
     });
-  }
   } else {
     const user = await User.findByUserName(req.body.username).catch(next);
       if (!user) return res.status(401).json({ code: 401, msg: 'Authentication failed. User not found.' });
       user.comparePassword(req.body.password, (err, isMatch) => {
         if (isMatch && !err) {
           // if user is found and password is right create a token
-          const token = jwt.sign(user.username, process.env.secret);
+          const token = jwt.sign(user.username, process.env.SECRET);
           // return the information including token as JSON
           res.status(200).json({
             success: true,
